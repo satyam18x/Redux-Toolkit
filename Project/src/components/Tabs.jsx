@@ -9,19 +9,18 @@ const Tabs = () => {
     const tabs = [
         { id: 'photos', label: 'Photos' },
         { id: 'videos', label: 'Videos' },
-       
     ]
 
     return (
-        <div className='flex justify-center gap-6 p-6 border-b border-gray-100'>
+        <div className='flex gap-2 border-b border-[#1f1f22] mb-8'>
             {tabs.map(tab => (
                 <button
                     key={tab.id}
                     onClick={() => dispatch(setActiveTabs(tab.id))}
-                    className={`px-8 py-2.5 rounded-full cursor-pointer text-sm font-medium transition-all duration-300 transform active:scale-95 ${
+                    className={`px-6 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-b-2 ${
                         activeTab === tab.id 
-                        ? 'bg-gray-500 text-white shadow-lg' 
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                        ? 'border-blue-600 text-white' 
+                        : 'border-transparent text-[#64748b] hover:text-[#94a3b8]'
                     }`}
                 >
                     {tab.label}
@@ -31,4 +30,8 @@ const Tabs = () => {
     )
 }
 
+
+
 export default Tabs
+
+

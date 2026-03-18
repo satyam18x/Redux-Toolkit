@@ -1,68 +1,86 @@
-
-/*import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToCollection, removeFromCollection } from '../REDUX/features/collection'
+import { addCollection, removeCollection, addedToast, removeToast } from '../REDUX/features/collection'
 
-const ResultCard = ({ item, type }) => {
+const ResultCard = ({ item }) => {
     const dispatch = useDispatch()
-    const collection = useSelector(state => state.collection.items)
+    const { items: collection } = useSelector((state) => state.collection)
     const isSaved = collection.some(i => i.id === item.id)
 
-    const toggleSave = () => {
+    const toggleSave = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
         if (isSaved) {
-            dispatch(removeFromCollection(item))
+            dispatch(removeCollection(item.id))
+            dispatch(removeToast())
         } else {
-            dispatch(addToCollection(item))
+            dispatch(addCollection(item))
+            dispatch(addedToast())
         }
     }
 
     return (
-        <div className='relative group overflow-hidden rounded-xl shadow-sm hover:shadow-xl transition-all duration-500'>
-            {type === 'photos' ? (
-                <img 
-                    src={item.urls.regular} 
-                    alt={item.alt_description} 
-                    className='w-full h-80 object-cover transform transition-transform duration-700 group-hover:scale-110' 
-                />
-            ) : (
-                <div className='relative h-80'>
-                    <video 
-                        src={item.video_files[0].link} 
-                        className='w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110' 
-                        loop 
-                        muted 
-                        onMouseOver={e => e.target.play()}
-                        onMouseOut={e => e.target.pause()}
+        <div className='minimal-card rounded overflow-hidden flex flex-col h-full group'>
+            {/* Media Container */}
+            <div className='aspect-video overflow-hidden bg-[#161618] relative'>
+                {item.type === 'photo' && (
+                    <img 
+                        className='h-full w-full object-cover' 
+                        src={item.thumbnail} 
+                        alt={item.title} 
+                        loading="lazy"
                     />
-                    <div className='absolute bottom-3 right-3 bg-black/40 backdrop-blur-md px-2 py-1 rounded text-[10px] text-white uppercase tracking-wider'>Video</div>
-                </div>
-            )}
-            
-            <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4'>
-                <p className='text-white text-sm font-medium line-clamp-2'>
-                    {type === 'photos' ? item.alt_description : item.user.name}
-                </p>
+                )}
+                {item.type === 'video' && (
+                    <video 
+                        className='h-full w-full object-cover' 
+                        autoPlay loop muted playsInline
+                        src={item.src}
+                    ></video>
+                )}
+                
+                {/* Simple Save Button on Media */}
+                <button
+                    onClick={toggleSave}
+                    className={`absolute top-2 right-2 p-2 rounded transition-colors ${
+                        isSaved 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-black/50 text-white opacity-0 group-hover:opacity-100'
+                    }`}
+                >
+                    <svg className="w-4 h-4" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                    </svg>
+                </button>
             </div>
 
-            <button 
-                onClick={toggleSave}
-                className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 active:scale-90 ${
-                    isSaved ? 'bg-red-500 text-white shadow-red-500/50' : 'bg-white/80 text-gray-700 hover:bg-white'
-                } shadow-lg`}
-            >
-                {isSaved ? (
-                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                    </svg>
-                ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                )}
-            </button>
+            {/* Metadata Layer (Always Visible) */}
+            <div className='p-4 space-y-2 flex-grow flex flex-col justify-between'>
+                <div className='space-y-1'>
+                    <div className='flex items-center gap-2'>
+                        <span className='text-[10px] font-bold uppercase tracking-wider text-blue-500/80'>{item.type}</span>
+                        <span className='text-[10px] font-medium text-[#475569]'>• curated</span>
+                    </div>
+                    <h3 className='text-xs font-bold text-white line-clamp-1 leading-snug'>{item.title}</h3>
+                </div>
+                
+                <div className='pt-3 flex items-center justify-between border-t border-[#1f1f22] mt-auto'>
+                    <a 
+                        href={item.url} 
+                        target='_blank' 
+                        rel='noreferrer' 
+                        className='text-[10px] font-medium text-[#64748b] hover:text-white transition-colors flex items-center gap-1'
+                    >
+                        Source
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    </a>
+                </div>
+            </div>
         </div>
     )
 }
 
 export default ResultCard
-*/
+
+
+
+

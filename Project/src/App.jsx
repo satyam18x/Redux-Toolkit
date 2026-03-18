@@ -1,16 +1,24 @@
-import React from 'react'
-import Search from './components/Search'
-import Tabs from './components/Tabs'
+import { Route, Routes } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import CollectionPage from './pages/CollectionPage'
+import Navbar from './components/Navbar'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+  
 const App = () => {
-    return (
-        <div className="min-h-screen w-full bg-gray-950 flex flex-col items-center py-8 ">
-            <div className="w-full max-w-4xl  backdrop-blur-2xl  border-white/10 p-8 shadow-2xl">
-                <h1 className="text-4xl font-black text-white text-center mb-8 tracking-tighter">Media <span className="text-gray-500 font-light">Search</span></h1>
-                <Search />
-                <Tabs />
-            </div>
-        </div>
-    )
+  return (
+    <div className="min-h-screen text-white w-full bg-gray-950">
+
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/collection' element={<CollectionPage />} />
+      </Routes>
+
+      <ToastContainer />
+
+    </div>
+  )
 }
 
 export default App

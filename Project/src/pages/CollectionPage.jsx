@@ -1,37 +1,56 @@
-/*import React from 'react'
-import { useSelector } from 'react-redux'
-import ResultCard from '../components/ResultCard'
+import { useDispatch, useSelector } from "react-redux"
+import CollectionCard from "../components/CollectionCard"
+import { clearCollection } from '../REDUX/features/collection'
 
-const CollecctionPage = () => {
+const CollectionPage = () => {
     const collection = useSelector(state => state.collection.items)
+    const dispatch = useDispatch()
 
     return (
-        <div className='max-w-7xl mx-auto p-6'>
-            <div className='flex items-center justify-between mb-10'>
-                <h2 className='text-3xl font-bold tracking-tight'>Saved Collection</h2>
-                <div className='text-sm text-gray-500 bg-gray-100 px-4 py-1 rounded-full'>
-                    {collection.length} items
-                </div>
+        <div className='min-h-screen bg-[#0f0f10] text-[#94a3b8]'>
+            <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+                {collection.length > 0 ? (
+                    <div className="space-y-12 mb-16">
+                        <div className='max-w-3xl space-y-6'>
+                            <h1 className="text-4xl md:text-5xl font-bold text-white">Your Vault</h1>
+                            <p className="text-lg text-[#64748b] leading-relaxed">
+                                Persistent collection of curated assets. Review and manage your discoveries across sessions.
+                            </p>
+                            <div className='flex items-center gap-6 pt-2'>
+                                <p className='text-xs font-bold uppercase tracking-widest text-[#475569]'>{collection.length} items curated</p>
+                                <button 
+                                    onClick={() => dispatch(clearCollection())}
+                                    className="btn-minimal text-[10px] font-bold uppercase tracking-widest px-6"
+                                >
+                                    Purge Vault
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-8 border-t border-[#1f1f22]'>
+                            {collection.map((item) => (
+                                <CollectionCard key={item.id} item={item} />
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-40 text-center space-y-8">
+                        <div className="w-16 h-16 bg-[#161618] rounded border border-[#1f1f22] flex items-center justify-center">
+                            <span className='text-[#475569] font-bold text-2xl'>X</span>
+                        </div>
+                        <div className='space-y-3'>
+                            <h2 className="text-xl font-bold text-white">Vault is empty</h2>
+                            <p className="text-sm text-[#475569] max-w-[300px] mx-auto">You haven't added any assets to your collection yet.</p>
+                        </div>
+                    </div>
+                )}
             </div>
-            
-            {collection.length === 0 ? (
-                <div className='flex flex-col items-center justify-center py-32 text-gray-400 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100'>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <p className='text-xl'>Your collection is waiting to be filled</p>
-                    <p className='text-sm mt-2 font-light'>Save photos and videos to see them here.</p>
-                </div>
-            ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
-                    {collection.map(item => (
-                        <ResultCard key={item.id} item={item} type={item.urls ? 'photos' : 'videos'} />
-                    ))}
-                </div>
-            )}
         </div>
     )
 }
 
-export default CollecctionPage
-*/
+export default CollectionPage
+
+
+
+
