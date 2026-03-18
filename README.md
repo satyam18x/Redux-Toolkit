@@ -1,6 +1,6 @@
 # 🎯 Media Search Application (Redux Toolkit)
 
-This is a **media search web application** built using React and Redux Toolkit that allows users to search and explore high-quality images from multiple sources.
+This is a **media search web application** built using React and Redux Toolkit that allows users to search and explore high-quality images ,videos from multiple sources.
 
 ---
 
@@ -14,7 +14,7 @@ Users can enter a query and instantly get relevant results, making the experienc
 
 ## 🔍 Features
 
-- Search images in real-time based on user queries  
+- Search images,videos in real-time based on user queries  
 - Fetch data from multiple APIs:
   - Unsplash API  
   - Pexels API  
